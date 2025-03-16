@@ -1,0 +1,65 @@
+Traceback (most recent call last):
+  File "C:\Users\Yuliceth Ramos\.conda\envs\ml-env\lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+  File "C:\Users\Yuliceth Ramos\AppData\Roaming\Python\Python39\site-packages\nbclient\client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "C:\Users\Yuliceth Ramos\AppData\Roaming\Python\Python39\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+  File "C:\Users\Yuliceth Ramos\.conda\envs\ml-env\lib\asyncio\base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "C:\Users\Yuliceth Ramos\AppData\Roaming\Python\Python39\site-packages\nbclient\client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\Yuliceth Ramos\AppData\Roaming\Python\Python39\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\Yuliceth Ramos\AppData\Roaming\Python\Python39\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from google.colab import drive
+import pandas as pd
+import seaborn as sns
+import warnings
+from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Montar Google Drive
+drive.mount('/content/drive')
+
+# Configuración general
+warnings.filterwarnings("ignore")
+sns.set_style("darkgrid")
+
+# Cargar los datos desde Google Drive
+df = pd.read_csv('/content/drive/My Drive/Modelado_Misisipi/Datos_Caudal_Mssp.csv')
+
+# Verificar si la columna 'datetime' existe antes de convertirla
+if 'datetime' in df.columns:
+    # Especificar el formato correcto para las fechas
+    df['datetime'] = pd.to_datetime(df['datetime'], format='%d/%m/%Y %H:%M')  # Convertir a formato de fecha
+    df.set_index('datetime', inplace=True)  # Establecerla como índice
+else:
+    print("Advertencia: No se encontró la columna 'datetime' en los datos.")
+
+# Verificar que el encabezado de la columna de datos esté correctamente ajustado a 'Caudal'
+if 'Caudal' in df.columns:
+    print("La columna 'Caudal' se encuentra correctamente.")
+else:
+    print("Advertencia: No se encontró la columna 'Caudal' en los datos.")
+
+# Ver las primeras filas para asegurarnos de que los datos están bien cargados
+print(df.head())
+
+
+------------------
+
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Cell [1;32mIn[3], line 1[0m
+[1;32m----> 1[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mgoogle[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcolab[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m drive
+[0;32m      2[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[38;5;21;01mpd[39;00m
+[0;32m      3[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mseaborn[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[38;5;21;01msns[39;00m
+
+[1;31mModuleNotFoundError[0m: No module named 'google.colab'
+

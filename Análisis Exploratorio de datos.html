@@ -1,0 +1,2261 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Análisis Exploratorio de datos &#8212; Predicción del Caudal del Río Misisipi - Evaluación de Modelos y Validación de Resultados</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Análisis Exploratorio de datos';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modelado del caudal del rio Misisipi" href="Modelos_Caudal_Misisipi.html" />
+    <link rel="prev" title="Predicción del Caudal del Río Misisipi: Evaluación de Modelos y Validación de Resultados" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Predicción del Caudal del Río Misisipi - Evaluación de Modelos y Validación de Resultados - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Predicción del Caudal del Río Misisipi - Evaluación de Modelos y Validación de Resultados - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Predicción del Caudal del Río Misisipi: Evaluación de Modelos y Validación de Resultados
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Análisis Exploratorio de datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modelos_Caudal_Misisipi.html">Modelado del caudal del rio Misisipi</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Yuliceth/Final_Modelos_Caudal" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Yuliceth/Final_Modelos_Caudal/issues/new?title=Issue%20on%20page%20%2FAnálisis Exploratorio de datos.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Análisis Exploratorio de datos.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Análisis Exploratorio de datos</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="analisis-exploratorio-de-datos">
+<h1>Análisis Exploratorio de datos<a class="headerlink" href="#analisis-exploratorio-de-datos" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Cargue y análisis preliminar de datos</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importar librerías</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Ruta del archivo</span>
+<span class="n">ruta_datos</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_crudos_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_datos</span><span class="p">)</span>
+
+<span class="c1"># Verificar el número de observaciones y variables</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensiones del conjunto de datos: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  
+
+<span class="c1"># Ver los primeros registros</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Primeros 5 registros:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Ver los últimos registros</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Últimos 5 registros:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dimensiones del conjunto de datos: (366084, 6)
+Primeros 5 registros:
+     Column1   Column2           Column3 Column4      Column5         Column6
+0  agency_cd   site_no          datetime   tz_cd  77624_00060  77624_00060_cd
+1         5s       15s               20d      6s          14n             10s
+2       USGS  07022000  1995-02-03 14:00     CST       212000          A:[91]
+3       USGS  07022000  1995-02-03 14:21     CST       211000          A:[91]
+4       USGS  07022000  1995-02-03 15:00     CST       211000          A:[91]
+Últimos 5 registros:
+       Column1  Column2           Column3 Column4 Column5 Column6
+366079    USGS  7022000  2025-01-26 11:00     CST   87800       P
+366080    USGS  7022000  2025-01-26 11:30     CST   88000       P
+366081    USGS  7022000  2025-01-26 12:00     CST   88100       P
+366082    USGS  7022000  2025-01-26 12:30     CST   88200       P
+366083    USGS  7022000  2025-01-26 13:00     CST   88100       P
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\3382092221.py:11: DtypeWarning: Columns (1,4) have mixed types. Specify dtype option on import or set low_memory=False.
+  df = pd.read_csv(ruta_datos)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Ruta del archivo</span>
+<span class="n">ruta_datos</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_crudos_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos ignorando las primeras 3 filas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_datos</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Mostrar las primeras filas para verificar</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>5s</th>
+      <th>15s</th>
+      <th>20d</th>
+      <th>6s</th>
+      <th>14n</th>
+      <th>10s</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>USGS</td>
+      <td>7022000</td>
+      <td>1995-02-03 14:00</td>
+      <td>CST</td>
+      <td>212000.0</td>
+      <td>A:[91]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>USGS</td>
+      <td>7022000</td>
+      <td>1995-02-03 14:21</td>
+      <td>CST</td>
+      <td>211000.0</td>
+      <td>A:[91]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>USGS</td>
+      <td>7022000</td>
+      <td>1995-02-03 15:00</td>
+      <td>CST</td>
+      <td>211000.0</td>
+      <td>A:[91]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>USGS</td>
+      <td>7022000</td>
+      <td>1995-02-03 15:21</td>
+      <td>CST</td>
+      <td>211000.0</td>
+      <td>A:[91]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>USGS</td>
+      <td>7022000</td>
+      <td>1995-02-03 16:00</td>
+      <td>CST</td>
+      <td>211000.0</td>
+      <td>A:[91]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Ruta del archivo</span>
+<span class="n">ruta_datos</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_crudos_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos ignorando solo las primeras 2 filas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_datos</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Seleccionar solo las columnas 3 y 5 y renombrarlas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>  <span class="c1"># Python cuenta desde 0, por eso usamos 2 y 4</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]</span>
+
+<span class="c1"># Mostrar las primeras filas para verificar</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>datetime</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1995-02-03 14:00</td>
+      <td>212000.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1995-02-03 14:21</td>
+      <td>211000.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1995-02-03 15:00</td>
+      <td>211000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1995-02-03 15:21</td>
+      <td>211000.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1995-02-03 16:00</td>
+      <td>211000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estadísticas Descriptivas</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar los datos</span>
+<span class="n">ruta_datos</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_crudos_Mississippi.csv&quot;</span>  <span class="c1"># Verificar que la ruta sea correcta</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_datos</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Saltar las primeras 2 filas si es necesario</span>
+
+<span class="c1"># Seleccionar solo las columnas relevantes y renombrarlas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>  <span class="c1"># Python cuenta desde 0, por eso seleccionamos la columna 3 y 5</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]</span>
+
+<span class="c1"># Convertir la columna datetime a formato de fecha</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Establecer datetime como índice</span>
+
+<span class="c1"># Estadísticas descriptivas de la columna &quot;height&quot;</span>
+<span class="n">statistics</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="c1"># Mostrar los resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estadísticas Descriptivas:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">statistics</span><span class="p">)</span>
+
+<span class="c1"># Calcular percentiles específicos</span>
+<span class="n">percentiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>  <span class="c1"># Percentiles 25%, 50% y 75%</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Percentiles 25%, 50% y 75%: </span><span class="se">\n</span><span class="si">{</span><span class="n">percentiles</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadísticas Descriptivas:
+count    3.660820e+05
+mean     2.538147e+05
+std      1.564165e+05
+min      0.000000e+00
+25%      1.290000e+05
+50%      2.080000e+05
+75%      3.390000e+05
+max      1.050000e+06
+Name: height, dtype: float64
+
+Percentiles 25%, 50% y 75%: 
+0.25    129000.0
+0.50    208000.0
+0.75    339000.0
+Name: height, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Guardar el nuevo archivo con datos limpios</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Ruta del archivo original</span>
+<span class="n">ruta_datos</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_crudos_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos ignorando solo las primeras 2 filas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_datos</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Seleccionar solo las columnas 3 y 5 y renombrarlas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>  <span class="c1"># Python cuenta desde 0, por eso usamos 2 y 4</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]</span>
+
+<span class="c1"># Guardar el nuevo archivo limpio</span>
+<span class="n">ruta_nueva</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_Limpios_Mississippi.csv&quot;</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">ruta_nueva</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nuevo archivo guardado en: </span><span class="si">{</span><span class="n">ruta_nueva</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nuevo archivo guardado en: C:/AST_Misisipi/EDA/Datos_Limpios_Mississippi.csv
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># VErificar si la frecuencia de la serie es regular o irregular</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Ruta del archivo limpio</span>
+<span class="n">ruta_nueva</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_Limpios_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos limpios</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_nueva</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">])</span>
+
+<span class="c1"># Ordenar los datos por fecha</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;datetime&quot;</span><span class="p">)</span>
+
+<span class="c1"># Tomar los primeros 10 registros</span>
+<span class="n">df_subset</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Calcular las diferencias de tiempo entre observaciones consecutivas</span>
+<span class="n">df_subset</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_subset</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+
+<span class="c1"># Mostrar las diferencias de tiempo</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Diferencias de tiempo entre registros consecutivos:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_subset</span><span class="p">[[</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;time_diff&#39;</span><span class="p">]])</span>
+
+<span class="c1"># Verificar si todas las diferencias son iguales</span>
+<span class="n">es_regular</span> <span class="o">=</span> <span class="n">df_subset</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># Ignoramos la primera fila (NaT)</span>
+
+<span class="c1"># Mostrar el resultado final</span>
+<span class="k">if</span> <span class="n">es_regular</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ La frecuencia de la serie es REGULAR.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️ La frecuencia de la serie es IRREGULAR.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diferencias de tiempo entre registros consecutivos:
+             datetime       time_diff
+0 1995-02-03 14:00:00             NaT
+1 1995-02-03 14:21:00 0 days 00:21:00
+2 1995-02-03 15:00:00 0 days 00:39:00
+3 1995-02-03 15:21:00 0 days 00:21:00
+4 1995-02-03 16:00:00 0 days 00:39:00
+5 1995-02-03 16:21:00 0 days 00:21:00
+6 1995-02-03 17:00:00 0 days 00:39:00
+7 1995-02-03 17:21:00 0 days 00:21:00
+8 1995-02-03 18:00:00 0 days 00:39:00
+9 1995-02-03 18:21:00 0 days 00:21:00
+
+⚠️ La frecuencia de la serie es IRREGULAR.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\3105416218.py:17: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_subset[&#39;time_diff&#39;] = df_subset[&#39;datetime&#39;].diff()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ajustar la frecuencia de los datos a 30 minutos </span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Ruta del archivo limpio</span>
+<span class="n">ruta_nueva</span> <span class="o">=</span> <span class="s2">&quot;C:/AST_Misisipi/EDA/Datos_Limpios_Mississippi.csv&quot;</span>
+
+<span class="c1"># Cargar los datos limpios</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ruta_nueva</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">])</span>
+
+<span class="c1"># Renombrar columna para asegurarnos de que &quot;datetime&quot; existe correctamente</span>
+<span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Eliminar espacios ocultos en los nombres de columnas</span>
+<span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;DateTime&#39;</span><span class="p">:</span> <span class="s1">&#39;datetime&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+
+<span class="c1"># Ajustar la frecuencia a 30 minutos</span>
+<span class="n">df_resampled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;30min&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Mostrar las primeras filas después del resampleo</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Primeras filas después del resampleo:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Primeras filas después del resampleo:
+                       height
+datetime                     
+1995-02-03 14:00:00  211500.0
+1995-02-03 14:30:00       NaN
+1995-02-03 15:00:00  211000.0
+1995-02-03 15:30:00       NaN
+1995-02-03 16:00:00  211500.0
+1995-02-03 16:30:00       NaN
+1995-02-03 17:00:00  212000.0
+1995-02-03 17:30:00       NaN
+1995-02-03 18:00:00  212000.0
+1995-02-03 18:30:00       NaN
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Número de filas en el DataFrame original</span>
+<span class="n">num_filas_original</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Número de filas en el DataFrame después del resampleo</span>
+<span class="n">num_filas_resampleado</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Mostrar los resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔹 Número de filas en el DataFrame original: </span><span class="si">{</span><span class="n">num_filas_original</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔹 Número de filas en el DataFrame después del resampleo: </span><span class="si">{</span><span class="n">num_filas_resampleado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🔹 Número de filas en el DataFrame original: 366082
+🔹 Número de filas en el DataFrame después del resampleo: 525599
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calcular el porcentaje de valores NaN en cada columna</span>
+<span class="n">porcentaje_nan_columnas</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># Mostrar los resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Porcentaje de valores NaN por columna:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">porcentaje_nan_columnas</span><span class="p">)</span>
+
+<span class="c1"># Mostrar solo el porcentaje en la columna &#39;height&#39;</span>
+<span class="k">if</span> <span class="s1">&#39;height&#39;</span> <span class="ow">in</span> <span class="n">df_resampled</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Porcentaje de valores NaN en la columna &#39;height&#39;: </span><span class="si">{</span><span class="n">porcentaje_nan_columnas</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">La columna &#39;height&#39; no se encuentra en el DataFrame.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Porcentaje de valores NaN por columna:
+height    30.661588
+dtype: float64
+
+Porcentaje de valores NaN en la columna &#39;height&#39;: 30.66%
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imputar usando medias móviles con una ventana de 5 periodos (ajustable)</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="c1"># Verificar que los datos faltantes han sido imputados</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  <span class="c1"># Debería dar 0 si la imputación fue exitosa</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>height            161157
+height_imputed     18394
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.arima.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARIMA</span>
+
+<span class="c1"># Entrenar el modelo ARIMA para imputar los valores faltantes</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># Se puede con diferentes valores de p, d, q</span>
+<span class="n">model_fit</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Imputar los valores faltantes con el modelo ARIMA</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">model_fit</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Verificar que los datos faltantes han sido imputados</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  <span class="c1"># Debería dar 0 si la imputación fue exitosa</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>height                  161157
+height_imputed           18394
+height_imputed_arima         0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2. Visualización de la Serie</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Graficar los datos imputados</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s2">&quot;height_imputed_arima&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Datos imputados&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agregar etiquetas y título</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualización Serie con Datos Imputados&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Guardar la gráfica como imagen</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;C:/Users/Yuliceth Ramos/AST_Misisipi/EDA/visualizacion_datos_imputados.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar la gráfica</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6416caae6e9903e5b2da868eb1fd11ca4f25a8746b7af1bb2d91aa316d0cbe5a.png" src="_images/6416caae6e9903e5b2da868eb1fd11ca4f25a8746b7af1bb2d91aa316d0cbe5a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Descomponer la serie temporal</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.seasonal</span><span class="w"> </span><span class="kn">import</span> <span class="n">seasonal_decompose</span>
+
+<span class="c1"># Descomponer la serie temporal</span>
+<span class="n">decomposition</span> <span class="o">=</span> <span class="n">seasonal_decompose</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+
+<span class="c1"># Graficar los componentes</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># Gráfico de la serie original</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">411</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Serie Original&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gráfico de la tendencia</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">412</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">trend</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tendencia&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gráfico de la estacionalidad</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">413</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">seasonal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estacionalidad&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gráfico de los residuales (componentes irregulares)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">414</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residuales&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;descomposicion_serie_temporal.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2c6cd6dded30931311752a33b7fde5c28f8d5b466a74220dee2122e562e5878d.png" src="_images/2c6cd6dded30931311752a33b7fde5c28f8d5b466a74220dee2122e562e5878d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detección de anomalías</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Agrupar por mes y crear un gráfico de cajas para comparar distribuciones mensuales</span>
+<span class="c1"># Asegurar que el índice es de tipo datetime</span>
+<span class="n">df_resampled</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>  <span class="c1"># Si &#39;datetime&#39; es el índice, lo convertimos en columna</span>
+
+<span class="c1"># Crear la columna &#39;month&#39; a partir de la fecha</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span>
+
+<span class="c1"># Volver a establecer &#39;datetime&#39; como índice </span>
+<span class="n">df_resampled</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Mes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribución del Nivel del Río por Mes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1893373979.py:15: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.boxplot(x=df_resampled[&#39;month&#39;], y=df_resampled[&#39;height_imputed&#39;], palette=&quot;Blues&quot;)
+</pre></div>
+</div>
+<img alt="_images/93e1b3da3f03de030a12440072b80897fb503845d791ff974594413eac4b75d2.png" src="_images/93e1b3da3f03de030a12440072b80897fb503845d791ff974594413eac4b75d2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detección de anomalías</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">zscore</span>
+
+<span class="c1"># Calcular el Z-score para cada valor de la columna &#39;height_imputed&#39;</span>
+<span class="n">z_scores</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">])</span>
+
+<span class="c1"># Identificar los valores con Z-score mayor a 3 o menor a -3</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Mostrar los outliers detectados</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers detectados: </span><span class="si">{</span><span class="n">outliers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Outliers detectados:                        height  height_imputed  height_imputed_arima  month
+datetime                                                                  
+1995-05-18 23:00:00  714000.0        714000.0         714000.000000      5
+1995-05-18 23:30:00       NaN        712000.0         713259.438362      5
+1995-05-19 00:00:00  720000.0        720000.0         720000.000000      5
+1995-05-19 00:30:00       NaN        717000.0         718882.493669      5
+1995-05-19 01:00:00  720000.0        720000.0         720000.000000      5
+...                       ...             ...                   ...    ...
+2019-07-05 11:00:00  715000.0        715000.0         715000.000000      7
+2019-07-05 11:30:00  714000.0        714000.0         714000.000000      7
+2019-07-05 12:30:00  714000.0        714000.0         714000.000000      7
+2019-07-05 13:00:00  713000.0        713000.0         713000.000000      7
+2019-07-05 13:30:00  713000.0        713000.0         713000.000000      7
+
+[6443 rows x 4 columns]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3.	Estacionalidad y periodicidad</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Crear una figura con dos subgráficos (uno al lado del otro)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Graficar ACF en el primer subgráfico</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;ACF - Autocorrelación del Nivel del Río&quot;</span><span class="p">)</span>
+
+<span class="c1"># Graficar PACF en el segundo subgráfico</span>
+<span class="n">plot_pacf</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed_arima&#39;</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PACF - Autocorrelación Parcial del Nivel del Río&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ajustar el espaciado entre las gráficas</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1f7138b37925912fd30ff608e7032f647584b3b27703ce1662299205cdeb1b11.png" src="_images/1f7138b37925912fd30ff608e7032f647584b3b27703ce1662299205cdeb1b11.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Transformación del dominio del tiempo</span>
+<span class="c1"># Crear una figura con 4 subgráficos (2 arriba, 2 abajo)</span>
+
+<span class="c1"># Agregar por diferentes periodos de tiempo</span>
+<span class="n">df_monthly</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># Mensual</span>
+<span class="n">df_quarterly</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># Trimestral</span>
+<span class="n">df_semiannual</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;6M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># Semestral</span>
+<span class="n">df_annual</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># Anual</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1135662482.py:5: FutureWarning: &#39;M&#39; is deprecated and will be removed in a future version, please use &#39;ME&#39; instead.
+  df_monthly = df_resampled[&#39;height_imputed&#39;].resample(&#39;M&#39;).mean()  # Mensual
+C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1135662482.py:6: FutureWarning: &#39;Q&#39; is deprecated and will be removed in a future version, please use &#39;QE&#39; instead.
+  df_quarterly = df_resampled[&#39;height_imputed&#39;].resample(&#39;Q&#39;).mean()  # Trimestral
+C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1135662482.py:7: FutureWarning: &#39;M&#39; is deprecated and will be removed in a future version, please use &#39;ME&#39; instead.
+  df_semiannual = df_resampled[&#39;height_imputed&#39;].resample(&#39;6M&#39;).mean()  # Semestral
+C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1135662482.py:8: FutureWarning: &#39;A&#39; is deprecated and will be removed in a future version, please use &#39;YE&#39; instead.
+  df_annual = df_resampled[&#39;height_imputed&#39;].resample(&#39;A&#39;).mean()  # Anual
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Crear figura con 2 filas y 2 columnas</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Graficar el promedio mensual</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_monthly</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_monthly</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Promedio Mensual&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Promedio Mensual del Nivel del Río&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Graficar el promedio trimestral</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_quarterly</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_quarterly</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Promedio Trimestral&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Promedio Trimestral del Nivel del Río&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Graficar el promedio semestral</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_semiannual</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_semiannual</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Promedio Semestral&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Promedio Semestral del Nivel del Río&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Graficar el promedio anual</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_annual</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_annual</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Promedio Anual&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Promedio Anual del Nivel del Río&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Ajustar diseño</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/673e877851a7392d11ef4df93f105fc781224baa0a2c5b1967b3eb31d46bf21e.png" src="_images/673e877851a7392d11ef4df93f105fc781224baa0a2c5b1967b3eb31d46bf21e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 4.	Análisis de tendencia</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Aplicar la media móvil con la ventana de 1440 registros</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_moving_avg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">1440</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Graficar la serie original y la media móvil mensual</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nivel del río (original)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_moving_avg&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Media móvil (mensual)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tendencia del Nivel del Río con Media Móvil mensual&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/83df598f3ae92b54ec8fdbe393f66093c99f2f8aa6caa3df710fcd0d030e4ff6.png" src="_images/83df598f3ae92b54ec8fdbe393f66093c99f2f8aa6caa3df710fcd0d030e4ff6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Media móvil Semestral</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_moving_avg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">8640</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Graficar la serie original y la media móvil</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nivel del río (original)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_moving_avg&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Media Móvil (Semestral&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tendencia del Nivel del Río con Media Móvil Semestral&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2c7858750cb6c1992431003eac5b22d5ab7f7e19f52ad81382f19e21b552560f.png" src="_images/2c7858750cb6c1992431003eac5b22d5ab7f7e19f52ad81382f19e21b552560f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Suavización exponencial con un factor de suavización alpha</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_ewm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ewm</span><span class="p">(</span><span class="n">span</span><span class="o">=</span><span class="mi">8640</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1">#semestral</span>
+
+<span class="c1"># Graficar la serie original y el suavizado exponencial</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nivel del río (original)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height_ewm&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Suavización Exponencial (semestral)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tendencia del Nivel del Río con Suavización Exponencial&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/611a48d7bcda64bad8479df4db05757abfbfa6ca9275a4dc4cbf8a4c660d7a6e.png" src="_images/611a48d7bcda64bad8479df4db05757abfbfa6ca9275a4dc4cbf8a4c660d7a6e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Aplicar suavización exponencial ponderada</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_ewm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ewm</span><span class="p">(</span><span class="n">span</span><span class="o">=</span><span class="mi">4820</span><span class="p">,</span> <span class="n">adjust</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Graficar la serie suavizada</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_ewm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Serie con Media Exponencial Ponderada&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/111616ccb054f520e16490e9a1c55fa67539082d361402b61d60599776d025ea.png" src="_images/111616ccb054f520e16490e9a1c55fa67539082d361402b61d60599776d025ea.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">adfuller</span>
+
+<span class="c1"># Aplicar la prueba ADF</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>  <span class="c1"># Eliminar valores nulos</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Estadístico ADF: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valor p: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valores críticos: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rechazamos la hipótesis nula: los datos son estacionarios.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No podemos rechazar la hipótesis nula: los datos no son estacionarios.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadístico ADF: -10.271382707554162
+Valor p: 3.9931950914494306e-18
+Valores críticos: {&#39;1%&#39;: -3.4303678676510305, &#39;5%&#39;: -2.8615478972850723, &#39;10%&#39;: -2.5667742034374763}
+Rechazamos la hipótesis nula: los datos son estacionarios.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpss</span>
+
+<span class="c1"># Aplicar la prueba KPSS</span>
+<span class="n">result_kpss</span> <span class="o">=</span> <span class="n">kpss</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">regression</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>  <span class="c1"># &#39;c&#39; para prueba de nivel</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Estadístico KPSS: </span><span class="si">{</span><span class="n">result_kpss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valor p: </span><span class="si">{</span><span class="n">result_kpss</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valores críticos: </span><span class="si">{</span><span class="n">result_kpss</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">result_kpss</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rechazamos la hipótesis nula: los datos no son estacionarios.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No podemos rechazar la hipótesis nula: los datos son estacionarios.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadístico KPSS: 1.82020199176406
+Valor p: 0.01
+Valores críticos: {&#39;10%&#39;: 0.347, &#39;5%&#39;: 0.463, &#39;2.5%&#39;: 0.574, &#39;1%&#39;: 0.739}
+Rechazamos la hipótesis nula: los datos no son estacionarios.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\1962471898.py:4: InterpolationWarning: The test statistic is outside of the range of p-values available in the
+look-up table. The actual p-value is smaller than the p-value returned.
+
+  result_kpss = kpss(df[&quot;height&quot;].dropna(), regression=&#39;c&#39;)  # &#39;c&#39; para prueba de nivel
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dividir los datos en submuestras (cada 6 meses) y calcular la media y varianza</span>
+<span class="n">subsample</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;6M&#39;</span><span class="p">)</span>  <span class="c1"># &#39;6M&#39; para cada 6 meses</span>
+
+<span class="c1"># Calcular la media y la varianza de cada submuestra</span>
+<span class="n">mean_subsamples</span> <span class="o">=</span> <span class="n">subsample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">var_subsamples</span> <span class="o">=</span> <span class="n">subsample</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+
+<span class="c1"># Graficar la media y la varianza en función del tiempo</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Gráfico de la media</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean_subsamples</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">mean_subsamples</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Media&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Media de los Datos en Submuestras de 6 Meses&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Gráfico de la varianza</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_subsamples</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">var_subsamples</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Varianza&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Varianza de los Datos en Submuestras de 6 Meses&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Varianza&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Ajustar el espaciado y mostrar las gráficas</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\3909271696.py:2: FutureWarning: &#39;M&#39; is deprecated and will be removed in a future version, please use &#39;ME&#39; instead.
+  subsample = df_resampled[&#39;height_imputed&#39;].resample(&#39;6M&#39;)  # &#39;6M&#39; para cada 6 meses
+</pre></div>
+</div>
+<img alt="_images/7444049d5c5627855deba32c17586e0b1546273d216a715707a2abd5949b9266.png" src="_images/7444049d5c5627855deba32c17586e0b1546273d216a715707a2abd5949b9266.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 6.2. Transformaciones de datos </span>
+<span class="c1"># Aplicar logaritmo a la serie para estabilizar la varianza</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">])</span>
+
+<span class="c1"># Graficar para comparar la serie original con la transformada</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_log&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Log Transformada&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Transformación Logarítmica de los Datos del Nivel del Río Misisipi&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\Yuliceth Ramos\.conda\envs\ml-env\lib\site-packages\pandas\core\arraylike.py:399: RuntimeWarning: divide by zero encountered in log
+  result = getattr(ufunc, method)(*inputs, **kwargs)
+</pre></div>
+</div>
+<img alt="_images/30748a558f2d6ba2cf1e32d90e96c3af9712fdcaf4f7b8d4982bffd70ffaf4a7.png" src="_images/30748a558f2d6ba2cf1e32d90e96c3af9712fdcaf4f7b8d4982bffd70ffaf4a7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Diferenciación de la serie para eliminar la tendencia</span>
+<span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+
+<span class="c1"># Graficar para comparar la serie original con la diferenciada</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_resampled</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Diferenciación&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Diferenciación de los Datos del Nivel del Río Misisipi&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Caudal ($\mathrm</span><span class="si">{ft}</span><span class="s1">^3/s$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/114347fb4a66234d6f8b5cd976dc92f913e68ecd5dcb4c318880b71d519b12a7.png" src="_images/114347fb4a66234d6f8b5cd976dc92f913e68ecd5dcb4c318880b71d519b12a7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">adfuller</span>
+
+<span class="c1"># Realizar la prueba ADF en la serie diferenciada</span>
+<span class="n">adf_test</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+
+<span class="c1"># Mostrar los resultados de la prueba ADF</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Estadístico ADF: </span><span class="si">{</span><span class="n">adf_test</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valor p: </span><span class="si">{</span><span class="n">adf_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valores críticos: </span><span class="si">{</span><span class="n">adf_test</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluar si la serie es estacionaria</span>
+<span class="k">if</span> <span class="n">adf_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie es estacionaria según la prueba ADF.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie no es estacionaria según la prueba ADF.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadístico ADF: -47.1974772256423
+Valor p: 0.0
+Valores críticos: {&#39;1%&#39;: -3.4303629087866403, &#39;5%&#39;: -2.8615457055319165, &#39;10%&#39;: -2.566773036846194}
+La serie es estacionaria según la prueba ADF.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpss</span>
+
+<span class="c1"># Realizar la prueba KPSS en la serie diferenciada</span>
+<span class="n">kpss_test</span> <span class="o">=</span> <span class="n">kpss</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">regression</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar los resultados de la prueba KPSS</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Estadístico KPSS: </span><span class="si">{</span><span class="n">kpss_test</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valor p: </span><span class="si">{</span><span class="n">kpss_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Valores críticos: </span><span class="si">{</span><span class="n">kpss_test</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluar si la serie es estacionaria</span>
+<span class="k">if</span> <span class="n">kpss_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie no es estacionaria según la prueba KPSS.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie es estacionaria según la prueba KPSS.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadístico KPSS: 0.00746979323663413
+Valor p: 0.1
+Valores críticos: {&#39;10%&#39;: 0.347, &#39;5%&#39;: 0.463, &#39;2.5%&#39;: 0.574, &#39;1%&#39;: 0.739}
+La serie es estacionaria según la prueba KPSS.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Yuliceth Ramos\AppData\Local\Temp\ipykernel_28656\4222782175.py:4: InterpolationWarning: The test statistic is outside of the range of p-values available in the
+look-up table. The actual p-value is greater than the p-value returned.
+
+  kpss_test = kpss(df_resampled[&#39;height_diff&#39;].dropna(), regression=&#39;c&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+
+<span class="c1"># Graficar ACF y PACF para la serie diferenciada</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># ACF</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ACF - Serie Diferenciada&#39;</span><span class="p">)</span>
+
+<span class="c1"># PACF</span>
+<span class="n">plot_pacf</span><span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PACF - Serie Diferenciada&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b68548ba71479ca8432186d2ff9c1f5341c9ed4f31e1c0d390d9b9e695dd3a74.png" src="_images/b68548ba71479ca8432186d2ff9c1f5341c9ed4f31e1c0d390d9b9e695dd3a74.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Realizar la transformada de Fourier</span>
+<span class="c1"># Suponemos que df_resampled[&#39;height_imputed&#39;] es la serie temporal</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Realizar la FFT (Transformada Rápida de Fourier)</span>
+<span class="n">fft_result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">fft_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="c1"># Obtener la magnitud de la FFT (espectro de amplitud)</span>
+<span class="n">fft_magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft_result</span><span class="p">)</span>
+
+<span class="c1"># Graficar el espectro de amplitud</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fft_freq</span><span class="p">,</span> <span class="n">fft_magnitude</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Transformada de Fourier - Espectro de Amplitud&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia (Hz)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Magnitud&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.0004</span><span class="p">,</span> <span class="mf">0.0004</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4e10</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Para visualizar el espectro de potencia, se calcula el cuadrado de la magnitud</span>
+<span class="n">power_spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">fft_magnitude</span><span class="p">)</span>
+
+<span class="c1"># Graficar el espectro de potencia</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fft_freq</span><span class="p">,</span> <span class="n">power_spectrum</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Espectro de Potencia&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia (Hz)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Potencia&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.0004</span><span class="p">,</span> <span class="mf">0.0004</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2e22</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1b665f9e26badb780903be7bb62c15b195b57d71715ffc79ac1d06baaa8c45d8.png" src="_images/1b665f9e26badb780903be7bb62c15b195b57d71715ffc79ac1d06baaa8c45d8.png" />
+<img alt="_images/7d1beea084c76035212ef8599f2a9a7efdbb98384ff1029403661113af8c9f8e.png" src="_images/7d1beea084c76035212ef8599f2a9a7efdbb98384ff1029403661113af8c9f8e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calcular el IQR</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+<span class="c1"># Definir los límites superior e inferior</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+<span class="c1"># Filtrar los valores atípicos</span>
+<span class="n">outliers_iqr</span> <span class="o">=</span> <span class="n">df_resampled</span><span class="p">[(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df_resampled</span><span class="p">[</span><span class="s1">&#39;height_imputed&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">)]</span>
+
+<span class="c1"># Mostrar los outliers</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outliers_iqr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       height  height_imputed  height_imputed_arima  month  \
+datetime                                                                     
+1995-05-18 05:00:00  651000.0        651000.0         651000.000000      5   
+1995-05-18 06:00:00  650000.0        650000.0         650000.000000      5   
+1995-05-18 06:30:00       NaN        650500.0         649662.116422      5   
+1995-05-18 07:00:00  657000.0        657000.0         657000.000000      5   
+1995-05-18 07:30:00       NaN        653500.0         655815.249622      5   
+...                       ...             ...                   ...    ...   
+2019-07-09 07:30:00  651000.0        651000.0         651000.000000      7   
+2019-07-09 08:00:00  651000.0        651000.0         651000.000000      7   
+2019-07-09 08:30:00  650000.0        650000.0         650000.000000      7   
+2019-07-09 09:30:00  650000.0        650000.0         650000.000000      7   
+2019-07-09 10:30:00  650000.0        650000.0         650000.000000      7   
+
+                        height_ewm  height_log  height_diff  
+datetime                                                     
+1995-05-18 05:00:00  325351.860583   13.386265      14000.0  
+1995-05-18 06:00:00  325618.885631   13.384728       5500.0  
+1995-05-18 06:30:00  325753.663111   13.385497        500.0  
+1995-05-18 07:00:00  325891.081214   13.395439       6500.0  
+1995-05-18 07:30:00  326026.990327   13.390098      -3500.0  
+...                            ...         ...          ...  
+2019-07-09 07:30:00  717161.620113   13.386265       1000.0  
+2019-07-09 08:00:00  717134.172853   13.386265          0.0  
+2019-07-09 08:30:00  717106.322128   13.384728      -1000.0  
+2019-07-09 09:30:00  717050.240655   13.384728       1000.0  
+2019-07-09 10:30:00  716993.791024   13.384728       2000.0  
+
+[9687 rows x 7 columns]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Conversión de frecuencia de los datos a 60 minutos</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="c1"># Cargar los datos desde Google Drive</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;G:\Mi unidad\Modelado_Misisipi/Datos_Limpios_Mississippi.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Verificar si la columna &#39;datetime&#39; existe antes de convertirla</span>
+<span class="k">if</span> <span class="s1">&#39;datetime&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="c1"># Especificar el formato correcto para las fechas</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y %H:%M&#39;</span><span class="p">)</span>  <span class="c1"># Convertir a formato de fecha</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Establecerla como índice</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Advertencia: No se encontró la columna &#39;datetime&#39; en los datos.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verificar que el encabezado de la columna de datos esté correctamente ajustado a &#39;Caudal&#39;</span>
+<span class="k">if</span> <span class="s1">&#39;Caudal&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La columna &#39;Caudal&#39; se encuentra correctamente.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Advertencia: No se encontró la columna &#39;Caudal&#39; en los datos.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verificar valores nulos, NaN, ceros, negativos y no numéricos</span>
+<span class="n">valores_nulos</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># Cantidad de valores nulos</span>
+<span class="n">valores_nan</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>      <span class="c1"># Cantidad de NaN (aunque isnull() y isna() son equivalentes)</span>
+<span class="n">valores_ceros</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>    <span class="c1"># Cantidad de ceros</span>
+<span class="n">valores_negativos</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="c1"># Cantidad de valores negativos</span>
+<span class="n">valores_no_numericos</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># valores no convertibles a numérico</span>
+
+<span class="c1"># Mostrar los resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores nulos: </span><span class="si">{</span><span class="n">valores_nulos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores NaN: </span><span class="si">{</span><span class="n">valores_nan</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores ceros: </span><span class="si">{</span><span class="n">valores_ceros</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores negativos: </span><span class="si">{</span><span class="n">valores_negativos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores no numéricos: </span><span class="si">{</span><span class="n">valores_no_numericos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ver las primeras filas para asegurarnos de que los datos están bien cargados</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>La columna &#39;Caudal&#39; se encuentra correctamente.
+Valores nulos: 0
+Valores NaN: 0
+Valores ceros: 1
+Valores negativos: 0
+Valores no numéricos: 0
+                     Caudal
+datetime                   
+1995-02-03 14:00:00  212000
+1995-02-03 14:21:00  211000
+1995-02-03 15:00:00  211000
+1995-02-03 15:21:00  211000
+1995-02-03 16:00:00  211000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Ver la totalidad de los datos por fila</span>
+<span class="c1"># Mostrar todas las columnas del DataFrame para asegurar que no se omiten</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># Mostrar todas las columnas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>  <span class="c1"># Ver las primeras filas del DataFrame</span>
+
+<span class="c1"># Imprimir la cantidad total de datos (número de filas)</span>
+<span class="n">total_datos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;La cantidad total de datos es: </span><span class="si">{</span><span class="n">total_datos</span><span class="si">}</span><span class="s2"> registros.&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Verificar si la frecuencia de los datos es regular o irregular</span>
+<span class="c1"># Calcular la diferencia de tiempo entre registros consecutivos</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>  <span class="c1"># Calcular la diferencia de tiempo</span>
+
+<span class="c1"># Revisar si las diferencias son constantes</span>
+<span class="n">diferencias_unicas</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>  <span class="c1"># Número de diferencias únicas</span>
+
+<span class="k">if</span> <span class="n">diferencias_unicas</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La frecuencia de los datos es regular.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La frecuencia de los datos es irregular.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar algunas diferencias de tiempo</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Algunas diferencias de tiempo:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>  <span class="c1"># Mostrar las primeras diferencias de tiempo</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                     Caudal
+datetime                   
+1995-02-03 14:00:00  212000
+1995-02-03 14:21:00  211000
+1995-02-03 15:00:00  211000
+1995-02-03 15:21:00  211000
+1995-02-03 16:00:00  211000
+La cantidad total de datos es: 366082 registros.
+La frecuencia de los datos es irregular.
+Algunas diferencias de tiempo:
+datetime
+1995-02-03 14:00:00               NaT
+1995-02-03 14:21:00   0 days 00:21:00
+1995-02-03 15:00:00   0 days 00:39:00
+1995-02-03 15:21:00   0 days 00:21:00
+1995-02-03 16:00:00   0 days 00:39:00
+Name: time_diff, dtype: timedelta64[ns]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Eliminar registros duplicados con la misma marca de tiempo exacta</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Mostrar los primeros registros después de la limpieza</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Guardar el DataFrame limpio en Google Drive</span>
+<span class="n">df_clean</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;G:\Mi unidad\Modelado_Misisipi/Datos_Limpios_Sin_Duplicados.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                     Caudal       time_diff
+datetime                                   
+1995-02-03 14:00:00  212000             NaT
+1995-02-03 14:21:00  211000 0 days 00:21:00
+1995-02-03 15:00:00  211000 0 days 00:39:00
+1995-02-03 15:21:00  211000 0 days 00:21:00
+1995-02-03 16:00:00  211000 0 days 00:39:00
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imprimir la cantidad total de datos (número de filas)</span>
+<span class="n">total_datos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;La cantidad total de datos es: </span><span class="si">{</span><span class="n">total_datos</span><span class="si">}</span><span class="s2"> registros.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>La cantidad total de datos es: 366082 registros.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Asegurar que datetime sea el índice</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>  <span class="c1"># Ordenar por fecha</span>
+<span class="n">df_regular</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>  <span class="c1"># &#39;T&#39; para frecuencia de 1 minuto</span>
+
+<span class="c1"># Calcular diferencias de tiempo</span>
+<span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_regular</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>  <span class="c1"># Diferencia entre registros</span>
+<span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;time_diff_minutos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span>  <span class="c1"># En minutos</span>
+<span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;time_diff_segundos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;time_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>  <span class="c1"># En segundos</span>
+
+<span class="c1"># Guardar el DataFrame con NaN en los espacios faltantes</span>
+<span class="n">df_regular</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Regularizados_Solo_Celdas.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar las primeras filas para verificar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_regular</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       Caudal       time_diff  time_diff_minutos  \
+datetime                                                           
+1995-02-03 14:00:00  212000.0             NaT                NaN   
+1995-02-03 14:01:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:02:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:03:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:04:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:05:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:06:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:07:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:08:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:09:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:10:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:11:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:12:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:13:00       NaN 0 days 00:01:00                1.0   
+1995-02-03 14:14:00       NaN 0 days 00:01:00                1.0   
+
+                     time_diff_segundos  
+datetime                                 
+1995-02-03 14:00:00                 NaN  
+1995-02-03 14:01:00                60.0  
+1995-02-03 14:02:00                60.0  
+1995-02-03 14:03:00                60.0  
+1995-02-03 14:04:00                60.0  
+1995-02-03 14:05:00                60.0  
+1995-02-03 14:06:00                60.0  
+1995-02-03 14:07:00                60.0  
+1995-02-03 14:08:00                60.0  
+1995-02-03 14:09:00                60.0  
+1995-02-03 14:10:00                60.0  
+1995-02-03 14:11:00                60.0  
+1995-02-03 14:12:00                60.0  
+1995-02-03 14:13:00                60.0  
+1995-02-03 14:14:00                60.0  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Paso 1: Rellenar con el último valor conocido (Forward Fill)</span>
+<span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+
+<span class="c1"># Paso 2: Suavizar con media móvil de 5 minutos (Rolling Window)</span>
+<span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_regular</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Guardar el DataFrame con los valores rellenados</span>
+<span class="n">df_regular</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Completos.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar los primeros valores para verificar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_regular</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       Caudal       time_diff  time_diff_minutos  \
+datetime                                                           
+1995-02-03 14:00:00  212000.0             NaT                NaN   
+1995-02-03 14:01:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:02:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:03:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:04:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:05:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:06:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:07:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:08:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:09:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:10:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:11:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:12:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:13:00  212000.0 0 days 00:01:00                1.0   
+1995-02-03 14:14:00  212000.0 0 days 00:01:00                1.0   
+
+                     time_diff_segundos  
+datetime                                 
+1995-02-03 14:00:00                 NaN  
+1995-02-03 14:01:00                60.0  
+1995-02-03 14:02:00                60.0  
+1995-02-03 14:03:00                60.0  
+1995-02-03 14:04:00                60.0  
+1995-02-03 14:05:00                60.0  
+1995-02-03 14:06:00                60.0  
+1995-02-03 14:07:00                60.0  
+1995-02-03 14:08:00                60.0  
+1995-02-03 14:09:00                60.0  
+1995-02-03 14:10:00                60.0  
+1995-02-03 14:11:00                60.0  
+1995-02-03 14:12:00                60.0  
+1995-02-03 14:13:00                60.0  
+1995-02-03 14:14:00                60.0  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar el archivo CSV</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Completos.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Contar el número total de filas</span>
+<span class="n">num_filas</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Mostrar el resultado</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de filas en el archivo: </span><span class="si">{</span><span class="n">num_filas</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de filas en el archivo: 15767941
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar la serie de 1 minuto</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Completos.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Aplicar media móvil con ventana de 60 minutos</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_mm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Resamplear a cada hora, tomando el último valor de la media móvil</span>
+<span class="n">df_horario</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
+
+<span class="c1"># Guardar el resultado</span>
+<span class="n">df_horario</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Horarios.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar las primeras filas del nuevo DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_horario</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       Caudal        time_diff  time_diff_minutos  \
+datetime                                                            
+1995-02-03 14:00:00  211000.0  0 days 00:01:00                1.0   
+1995-02-03 15:00:00  211000.0  0 days 00:01:00                1.0   
+1995-02-03 16:00:00  212000.0  0 days 00:01:00                1.0   
+1995-02-03 17:00:00  212000.0  0 days 00:01:00                1.0   
+1995-02-03 18:00:00  212000.0  0 days 00:01:00                1.0   
+
+                     time_diff_segundos      Caudal_mm  
+datetime                                                
+1995-02-03 14:00:00                60.0  211383.333333  
+1995-02-03 15:00:00                60.0  211000.000000  
+1995-02-03 16:00:00                60.0  211616.666667  
+1995-02-03 17:00:00                60.0  212000.000000  
+1995-02-03 18:00:00                60.0  212000.000000  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar el DataFrame reducido</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C:\AST_Misisipi\Modelado_Misisipi/Datos_Horarios.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Convertir todas las columnas a tipo numérico, forzando errores a NaN si hay datos no convertibles</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+<span class="c1"># Verificar la cantidad de datos después de la reducción a cada hora</span>
+<span class="n">total_datos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de datos después de reducir la serie a cada hora: </span><span class="si">{</span><span class="n">total_datos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de datos después de reducir la serie a cada hora: 262800
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">zscore</span>
+
+<span class="c1"># Crear una figura con 3 subgráficos en una columna</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 1. Gráfico de la serie temporal</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Caudal por hora&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Caudal&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Serie de tiempo del Caudal por hora&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># 2. Histograma</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Caudal&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histograma del Caudal&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Boxplot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Caudal&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Boxplot del Caudal con posibles outliers&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Detección de outliers con IQR</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+<span class="c1"># Umbrales</span>
+<span class="n">limite_inferior</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+<span class="n">limite_superior</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+<span class="c1"># Filtrar outliers</span>
+<span class="n">outliers_iqr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">limite_inferior</span><span class="p">)</span> <span class="o">|</span>
+                           <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">limite_superior</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers detectados con IQR: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">outliers_iqr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Detección de outliers con Z-score</span>
+<span class="n">z_scores</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">])</span>
+<span class="n">outliers_z</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers detectados con Z-score: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">outliers_z</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/637d06b8a6ff642bf3ad5a5c595ea03ad164e08f278fd7155923af9d9942f8f1.png" src="_images/637d06b8a6ff642bf3ad5a5c595ea03ad164e08f278fd7155923af9d9942f8f1.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Outliers detectados con IQR: 5018
+Outliers detectados con Z-score: 3235
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calcular estadísticas generales</span>
+<span class="n">estadisticas</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">])</span>
+
+<span class="c1"># Identificar valores altos</span>
+<span class="n">percentil_95</span> <span class="o">=</span> <span class="n">estadisticas</span><span class="p">[</span><span class="s2">&quot;95%&quot;</span><span class="p">]</span>
+<span class="n">num_valores_altos</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Caudal_mm&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">percentil_95</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Imprimir resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estadísticas generales de la serie:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">estadisticas</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cantidad de valores por encima del percentil 95 (</span><span class="si">{</span><span class="n">percentil_95</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">num_valores_altos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estadísticas generales de la serie:
+count    2.628000e+05
+mean     2.505132e+05
+std      1.538411e+05
+min      1.030000e+04
+5%       8.700667e+04
+25%      1.290000e+05
+50%      2.030000e+05
+75%      3.360750e+05
+95%      5.500000e+05
+max      1.050000e+06
+Name: Caudal_mm, dtype: float64
+
+Cantidad de valores por encima del percentil 95 (550000.00): 13053
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="c1"># Configuración general</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="c1"># Cargar el DataFrame original</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C:/AST_Misisipi/Modelado_Misisipi/Datos_Horarios.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Aplicar logaritmo a la columna &#39;Caudal_mm&#39; y crear una nueva columna &#39;Caudal_log&#39;</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_mm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>  
+
+<span class="c1"># Guardar el DataFrame con la nueva columna logarítmica</span>
+<span class="n">output_path</span> <span class="o">=</span> <span class="s1">&#39;C:/AST_Misisipi/Modelado_Misisipi/Datos_Caudal_Horario_Log.csv&#39;</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+<span class="c1"># Confirmar la creación de la columna y la ruta del archivo guardado</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Se ha creado la columna &#39;Caudal_log&#39; y el nuevo archivo ha sido guardado en:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Caudal_mm&#39;</span><span class="p">,</span> <span class="s1">&#39;Caudal_log&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>  <span class="c1"># Mostrar las primeras filas de las columnas clave</span>
+
+<span class="c1"># Crear figura y ejes</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>  <span class="c1"># Ajustamos el tamaño para que quepan bien las tres gráficas</span>
+
+<span class="c1"># 1. Serie de tiempo logarítmica</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 3 filas, 1 columna, gráfica 1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Serie Logarítmica&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie de Tiempo Logarítmica&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Índice de Tiempo&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Valores Logarítmicos&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># 2. Histograma de la serie logarítmica</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 3 filas, 1 columna, gráfica 2</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Histograma de la Serie con Logaritmo&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Valores Logarítmicos&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Box plot de la serie logarítmica</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 3 filas, 1 columna, gráfica 3</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">patch_artist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+            <span class="n">boxprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;skyblue&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">),</span> 
+            <span class="n">flierprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Box Plot de la Serie Logarítmica&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Valores Logarítmicos&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ajustar la disposición para que no se sobrepongan</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Mostrar las gráficas</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Se ha creado la columna &#39;Caudal_log&#39; y el nuevo archivo ha sido guardado en:
+C:/AST_Misisipi/Modelado_Misisipi/Datos_Caudal_Horario_Log.csv
+                         Caudal_mm  Caudal_log
+datetime                                      
+1995-02-03 14:00:00  211383.333333   12.261429
+1995-02-03 15:00:00  211000.000000   12.259613
+1995-02-03 16:00:00  211616.666667   12.262532
+1995-02-03 17:00:00  212000.000000   12.264342
+1995-02-03 18:00:00  212000.000000   12.264342
+</pre></div>
+</div>
+<img alt="_images/7dff398d37596b5ccfb9ec2021f7a62344cec79c879186676cae4228d4625c11.png" src="_images/7dff398d37596b5ccfb9ec2021f7a62344cec79c879186676cae4228d4625c11.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">Caudal</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span>
+
+<span class="c1"># Calcular cuartiles e IQR</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">Caudal_log</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>  <span class="c1"># Primer cuartil (Q1)</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">Caudal_log</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>  <span class="c1"># Tercer cuartil (Q3)</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>  <span class="c1"># Rango intercuartílico</span>
+
+<span class="c1"># Definir límites para valores atípicos</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+<span class="c1"># Reemplazar outliers con el valor anterior (forward fill)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">))</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)]</span>
+
+<span class="c1"># Graficar boxplot después de la corrección</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Valores Logarítmicos&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/409587e5d24f325391645bb28ef101a7550254e759983f63f9a0498072424cc7.png" src="_images/409587e5d24f325391645bb28ef101a7550254e759983f63f9a0498072424cc7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mport</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Cargar el archivo</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;C:/AST_Misisipi/Modelado_Misisipi/Datos_Caudal_Horario_Log.csv&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">])</span>
+
+<span class="c1"># Reemplazar los valores de la columna &quot;Caudal&quot; con la inversa del logaritmo de &quot;Caudal_log&quot;</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Caudal_log&#39;</span><span class="p">])</span>
+
+<span class="c1"># Seleccionar solo las columnas datetime y Caudal</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;Caudal&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Guardar el nuevo archivo con el nombre indicado</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;C:/AST_Misisipi/Modelado_Misisipi/Datos_Caudal_Est.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Asignar el nuevo DataFrame a la variable caudal</span>
+<span class="n">caudal</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Archivo listo para usar en aplicación de modelos</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Predicción del Caudal del Río Misisipi: Evaluación de Modelos y Validación de Resultados</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Modelos_Caudal_Misisipi.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modelado del caudal del rio Misisipi</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yuliceth Ramos y Anderson Ojeda
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
